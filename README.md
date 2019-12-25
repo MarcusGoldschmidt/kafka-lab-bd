@@ -32,6 +32,6 @@ Producer é uma web api escrita em Node js usando nest, tem como objetivo recebe
 
 A principio, é um sistema parecido com o URI, na qual o usuario envia um codigo e o servidor analisa o codigo e responde com erros ou acerto conforme o resultado de saida.
 
-O request é recebido pela web api que persite no banco uma questão em analise e dispara um evento que será analisado de forma assincrona pelos consurmers, e salvarão no mesmo banco o resultado.
+O request é recebido pela web api que persiste no banco uma questão em analise e dispara um evento que será analisado de forma assincrona pelos consurmers salvando no mesmo banco o resultado.
 
-Projeto tem como objetivo o aprendizado do Kafha e não irá implementar a analise do da saida que o codigo dos usuário produzem.
+Projeto tem como objetivo o aprendizado do Kafha e não irá implementar a analise da saida que o codigo dos usuário produzem.
