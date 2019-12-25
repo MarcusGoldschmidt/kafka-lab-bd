@@ -10,7 +10,7 @@ Repositório iniciado para exemplo de aplicação utilizando kafka.
 
 * Kafka
 
-* zookeeper (Em analise)
+* zookeeper
 
 * Traefik (Pensando em usar)
  
