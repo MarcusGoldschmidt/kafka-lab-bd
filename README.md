@@ -12,11 +12,11 @@ Repositório iniciado para exemplo de aplicação utilizando kafka.
 
 * zookeeper
 
-* Traefik (Pensando em usar)
+* Traefik
  
-* Asp.net core (Pensando em usar para emitir os eventos)
+* NestJs (Para produzir os eventos)
 
-* Go ou Node js (Pensando em usar para consumir os eventos)
+* Go ou Node js (Para consumir os eventos)
 
 ## Instalando 
 
