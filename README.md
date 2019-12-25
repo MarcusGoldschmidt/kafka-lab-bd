@@ -26,6 +26,14 @@ Repositório iniciado para exemplo de aplicação utilizando kafka.
 
 `docker composer up -d `
 
+*Links*
+
+Web Api: [localhost](http://localhost)
+
+PgAdmin: [pg.localhost](http://pg.localhost)
+
+Traefik: [traefik.localhost](http://traefik.localhost)
+
 ## Aplicação
 
 Producer é uma web api escrita em Node js usando nest, tem como objetivo receber uma requisição e emitir um evento
