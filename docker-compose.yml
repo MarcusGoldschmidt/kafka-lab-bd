@@ -67,7 +67,7 @@ services:
 
 
   producer:
-    container_name: "producer"
+    container_name: "producer_nestjs"
     build:
       dockerfile: Dockerfile
       context: ./producer
