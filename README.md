@@ -1,5 +1,7 @@
 # Trabalho sobre Kafka 
 
+Repositório iniciado para exemplo de aplicação utilizando kafka.
+
 ## O que foi utilizado
 
 * postgres
