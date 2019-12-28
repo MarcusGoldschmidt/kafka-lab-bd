@@ -5,50 +5,50 @@ services:
   traefik:
     image: traefik
     command:
-      - "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
+      - --log.level=DEBUG
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
     ports:
-      - "80:80"
-      - "8080:8080"
+      - 80:80
+      - 8080:8080
     networks:
       - rede-externa
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
-      - "traefik.http.routers.api.service=api@internal"
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.api.service=api@internal
 
   postgres:
     image: postgres
     environment:
-      - POSTGRES_DB=maratona
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=admin
-      - TZ=GMT
+      POSTGRES_DB: maratona
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      TZ: GMT-4
     volumes:
-      - "./data/postgres:/var/lib/postgresql/data"
+      - ./data/postgres:/var/lib/postgresql/data
     networks:
       - rede-interna
 
   pg-admin:
     image: dpage/pgadmin4
     environment:
-      POSTGRES_USER: "postgres"
+      POSTGRES_USER: postgres
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_DEFAULT_PASSWORD: admin
     depends_on:
       - postgres
     networks:
       - rede-interna
       - rede-externa
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pgadmin.rule=Host(`pg.localhost`)"
-      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - traefik.enable=true
+      - traefik.http.routers.pgadmin.rule=Host(`pg.localhost`)
+      - traefik.http.routers.pgadmin.entrypoints=web
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -57,15 +57,14 @@ services:
 
   kafka:
     image: wurstmeister/kafka
-    ports:
-      - "9092:9092"
+    depends_on:
+      - zookeeper
     networks:
       - rede-interna
       - rede-externa
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-
 
   producer:
     build:
@@ -75,9 +74,9 @@ services:
     networks:
       - rede-externa
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.producer.rule=Host(`localhost`)"
-      - "traefik.http.routers.producer.entrypoints=web"
+      - traefik.enable=true
+      - traefik.http.routers.producer.rule=Host(`localhost`)
+      - traefik.http.routers.producer.entrypoints=web
 
 
 networks:
