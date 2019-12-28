@@ -4,7 +4,6 @@ version: "3.3"
 services:
   traefik:
     image: "traefik"
-    container_name: "traefik"
     command:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
@@ -25,7 +24,6 @@ services:
 
   postgres:
     image: postgres
-    container_name: "postgres"
     environment:
       - POSTGRES_DB=maratona
       - POSTGRES_USER=postgres
@@ -38,7 +36,6 @@ services:
 
   pg-admin:
     image: dpage/pgadmin4
-    container_name: "pgadmin4"
     environment:
       POSTGRES_USER: "postgres"
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
@@ -54,12 +51,10 @@ services:
       - "traefik.http.routers.pgadmin.entrypoints=web"
 
   zookeeper:
-    container_name: "zookeeper"
     image: wurstmeister/zookeeper
 
   kafka:
     image: wurstmeister/kafka
-    container_name: "kafka"
     ports:
       - "9092:9092"
     environment:
@@ -68,9 +63,7 @@ services:
 
 
   producer:
-    container_name: "producer_nestjs"
     build:
-      dockerfile: Dockerfile
       context: ./producer
     depends_on:
       - postgres
