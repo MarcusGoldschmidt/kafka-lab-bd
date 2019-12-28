@@ -1,5 +1,6 @@
 version: "3.3"
 
+
 services:
   traefik:
     image: "traefik"
@@ -13,11 +14,11 @@ services:
     ports:
       - "80:80"
       - "8080:8080"
-    networks: 
+    networks:
       - web
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    labels: 
+    labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.api.service=api@internal"
@@ -32,7 +33,7 @@ services:
       - TZ=GMT
     volumes:
       - "./data/postgres:/var/lib/postgresql/data"
-    networks: 
+    networks:
       - postgres-network
 
   pg-admin:
@@ -73,15 +74,15 @@ services:
       context: ./producer
     depends_on:
       - postgres
-    networks: 
+    networks:
       - web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.producer.rule=Host(`localhost`)"
       - "traefik.http.routers.producer.entrypoints=web"
-      
 
-networks: 
+
+networks:
   postgres-network:
     driver: bridge
   web:
