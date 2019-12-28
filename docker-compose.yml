@@ -23,7 +23,7 @@ services:
       - traefik.http.routers.api.service=api@internal
 
   postgres:
-    image: postgres
+    image: postgres:alpine
     environment:
       POSTGRES_DB: maratona
       POSTGRES_USER: postgres
@@ -51,7 +51,7 @@ services:
       - traefik.http.routers.pgadmin.entrypoints=web
 
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: zookeeper
     networks:
       - rede-interna
 
