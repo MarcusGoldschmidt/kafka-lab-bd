@@ -3,7 +3,7 @@ version: "3.3"
 
 services:
   traefik:
-    image: "traefik"
+    image: traefik
     command:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
@@ -14,7 +14,7 @@ services:
       - "80:80"
       - "8080:8080"
     networks:
-      - web
+      - rede-externa
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
@@ -32,7 +32,7 @@ services:
     volumes:
       - "./data/postgres:/var/lib/postgresql/data"
     networks:
-      - postgres-network
+      - rede-interna
 
   pg-admin:
     image: dpage/pgadmin4
@@ -43,8 +43,8 @@ services:
     depends_on:
       - postgres
     networks:
-      - postgres-network
-      - web
+      - rede-interna
+      - rede-externa
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`pg.localhost`)"
@@ -52,11 +52,16 @@ services:
 
   zookeeper:
     image: wurstmeister/zookeeper
+    networks:
+      - rede-interna
 
   kafka:
     image: wurstmeister/kafka
     ports:
       - "9092:9092"
+    networks:
+      - rede-interna
+      - rede-externa
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -68,7 +73,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - web
+      - rede-externa
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.producer.rule=Host(`localhost`)"
@@ -76,7 +81,5 @@ services:
 
 
 networks:
-  postgres-network:
-    driver: bridge
-  web:
-    driver: bridge
+  rede-interna:
+  rede-externa:
