@@ -1,21 +1,17 @@
-FROM node:10
+FROM node:10-alpine
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-
-WORKDIR /home/node/app
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-COPY --chown=node:node . .
+RUN apk add --no-cache build-base python
 
 USER node
 
-EXPOSE 3000
+RUN mkdir -p /home/node/app
 
-RUN npm run build
+WORKDIR /home/node/app
+
+COPY --chown=node:node . .
+
+RUN npm ci && npm run build
+
+EXPOSE 3000
 
 ENTRYPOINT npm run start:prod
