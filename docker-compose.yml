@@ -22,6 +22,7 @@ services:
       - traefik.http.routers.api.rule=Host(`traefik.localhost`)
       - traefik.http.routers.api.service=api@internal
 
+
   postgres:
     image: postgres:alpine
     environment:
@@ -34,8 +35,10 @@ services:
     networks:
       - rede-interna
 
-  pg-admin:
+
+  pgadmin:
     image: dpage/pgadmin4
+    container_name: "pgadmin"
     environment:
       POSTGRES_USER: postgres
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
@@ -62,9 +65,33 @@ services:
     networks:
       - rede-interna
       - rede-externa
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.rule=Host(`pg.localhost`)"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
+      - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    network_mode: host
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: localhost
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    network_mode: host
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: localhost:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    extra_hosts:
+      - "moby:127.0.0.1"
 
   producer:
     build:
