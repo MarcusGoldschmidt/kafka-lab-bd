@@ -1,6 +1,11 @@
 const {Kafka} = require('kafkajs');
 const log = require('log');
 
+const statusQuestao = {
+  processando: 0,
+    
+};
+
 const kafka = new Kafka({
     clientId: '1',
     brokers: ['127.0.0.1:29092']
