@@ -38,8 +38,9 @@ services:
       - rede-interna
 
   flyway:
+    container_name: "flyway"
     image: dhoer/flyway:alpine
-    command: -url=jdbc:postgresql://postgres:5432/ -schemas=maratona -user=postgres -password=admin migrate
+    command: -url=jdbc:postgresql://postgres:5432/maratona -schemas=public -user=postgres -password=admin migrate
     volumes:
       - ./migrations/migrations:/flyway/sql
     depends_on:
