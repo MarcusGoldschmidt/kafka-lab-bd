@@ -8,6 +8,7 @@ Exemplo de aplicação utilizando kafka.
 - [PgAdmin 4](https://www.pgadmin.org/)
 - [Apache Kafka](http://kafka.apache.org/)
 - [Apache Zookeeper](https://zookeeper.apache.org/)
+- [Flyway](https://flywaydb.org/)
 - [Traefik](https://traefik.io)
 - [NestJs](https://nestjs.com/) (produz os eventos)
 - [Go](https://golang.org/) / [Node.js](https://nodejs.org/) (consome os eventos)
