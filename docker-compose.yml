@@ -3,7 +3,6 @@ version: "3.3"
 
 services:
   traefik:
-    container_name: "traefik"
     image: traefik
     command:
       - --log.level=DEBUG
@@ -25,7 +24,6 @@ services:
 
 
   postgres:
-    container_name: "postgres"
     image: postgres:alpine
     environment:
       POSTGRES_DB: maratona
@@ -38,7 +36,6 @@ services:
       - rede-interna
 
   flyway:
-    container_name: "flyway"
     image: dhoer/flyway:alpine
     command: -url=jdbc:postgresql://postgres:5432/maratona -schemas=public -user=postgres -password=admin migrate
     volumes:
@@ -49,7 +46,6 @@ services:
       - rede-interna
 
   seeder:
-    container_name: "seeder"
     build:
       context: ./migrations
     depends_on:
@@ -75,7 +71,6 @@ services:
       - traefik.http.routers.pgadmin.entrypoints=web
 
   zookeeper:
-    container_name: "zookeeper"
     image: confluentinc/cp-zookeeper:latest
     network_mode: host
     environment:
@@ -86,7 +81,6 @@ services:
 
 
   kafka:
-    container_name: "kafha"
     image: confluentinc/cp-kafka:latest
     network_mode: host
     depends_on:
@@ -100,7 +94,6 @@ services:
       - "moby:127.0.0.1"
 
   producer:
-    container_name: "producer"
     build:
       context: ./producer
     depends_on:
