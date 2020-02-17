@@ -55,11 +55,11 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: "pgadmin"
     environment:
       POSTGRES_USER: postgres
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_HOST: 
     depends_on:
       - postgres
     networks:
