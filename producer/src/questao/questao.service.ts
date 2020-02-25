@@ -5,7 +5,7 @@ import {Repository} from 'typeorm';
 import {QuestaoPerfilTentativaEntity} from './questao-perfil-tentativa.entity';
 import {PerfilService} from '../perfil/perfil.service';
 import {QuestaoEntity} from './questao.entity';
-import {QuestaoEnviadaStatus} from "./questao-status.enum";
+import {QuestaoEnviadaStatus} from './questao-status.enum';
 
 @Injectable()
 export class QuestaoService {
@@ -29,10 +29,10 @@ export class QuestaoService {
             .getMany();
     }
 
-    async obterQuestoesJaProcessadas(): Promise<QuestaoPerfilTentativaEntity[]> {
+    async obterQuestoesPorStatus(status: QuestaoEnviadaStatus): Promise<QuestaoPerfilTentativaEntity[]> {
         return await this.tentativaEntityRepository
             .createQueryBuilder()
-            .where('status <> :status', {
+            .where({
                 status: QuestaoEnviadaStatus.PROCESSANDO,
             })
             .orderBy('criado_em', 'DESC')

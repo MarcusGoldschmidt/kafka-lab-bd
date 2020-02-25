@@ -27,6 +27,15 @@ const randonString = (length) => {
     return result;
 };
 
+const pool = new Pool({
+    connectionString: connectionString
+});
+
+pool.on('error', (err, client) => {
+    console.error('Unexpected error on idle client', err);
+    process.exit(-1);
+});
+
 const bootstrap = async () => {
     // Consuming
     await consumer.connect();
@@ -42,39 +51,46 @@ const bootstrap = async () => {
         autoCommit: true,
         eachMessage: async ({topic, partition, message}) => {
 
-            let data = message.value.toJSON();
+            console.log('INCIANDO PROCESSAMENTO');
 
-            const pool = new Pool({
-                connectionString: connectionString
-            });
+            const data = message.value.toString();
 
-            pool.connect((err, client, done) => {
+            pool.connect(async (err, client, done) => {
 
                 console.log({
                     topic,
                     partition,
                     offset: message.offset,
-                    value: data.toString(),
+                    value: JSON.stringify(data),
                 });
 
-                const id = 1;
+                const id = JSON.parse(data).id;
                 let sql;
+
+                console.log(`Processando Id: ${id}`);
                 // 1 to 3
                 switch ((Math.random() * 3 | 0) + 1) {
                     case 1:
                         const porcentagemErro = (Math.random() * 100 | 0) + 1;
                         sql = `UPDATE tentativaQuestao SET status = 1, porcentagem_erro = ${porcentagemErro} WHERE id = ${id}`;
+                        console.log(`ERROR: REPROVADO COM ${porcentagemErro}% de erro`);
                         break;
                     case 2:
                         sql = `UPDATE tentativaQuestao SET status = 2, saida_erro = ${randonString(500)} WHERE id = ${id}`;
+                        console.log(`ERROR: ERRO_COMPILADOR`);
                         break;
                     case 3:
                         sql = `UPDATE tentativaQuestao SET status = 3 WHERE id = ${id}`;
+                        console.log(`ERROR: APROVADO`);
                         break;
                 }
 
-                client.query(sql);
-                done();
+                try {
+                    await client.query(sql);
+                    done();
+                } catch (e) {
+
+                }
 
             });
         },

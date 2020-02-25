@@ -1,4 +1,4 @@
-import {Controller, Get, Post} from '@nestjs/common';
+import {Controller, Get, Param, Post} from '@nestjs/common';
 import {QuestaoService} from './questao.service';
 import {PublisherService} from '../publisher/publisher.service';
 
@@ -19,9 +19,9 @@ export class QuestaoController {
         return await this.questaoService.obterQuestoesProcessando();
     }
 
-    @Get('processadas')
-    async obterProcessados(): Promise<any> {
-        return await this.questaoService.obterQuestoesJaProcessadas();
+    @Get('status/:status')
+    async obterStatus(@Param() params: number): Promise<any> {
+        return await this.questaoService.obterQuestoesPorStatus(params);
     }
 
     @Post()

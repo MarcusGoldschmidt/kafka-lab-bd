@@ -105,11 +105,12 @@ services:
       context: ./producer
     environment:
       BD_HOST: postgres
-      KAFKA_HOST: 'kafka'
+      KAFKA_HOST: kafka
       PORT: 3000
     depends_on:
       - postgres
     networks:
+      - broker
       - rede-interna
       - rede-externa
     labels:

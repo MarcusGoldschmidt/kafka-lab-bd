@@ -33,7 +33,7 @@ export class PublisherService {
             topic: data.topicName,
             messages: [
                 {
-                    value: data.data.toString(),
+                    value: JSON.stringify(data.data),
                 },
             ],
         });
