@@ -18,7 +18,13 @@ export class QuestaoController {
     async enviarQuestao(data: {
         entrada: string,
         questaoId: number,
+        perfilId: number,
     }): Promise<any> {
-        return await this.questaoService.criarTentativaQuestao(data);
+        return await this.questaoService.submeterTentativaAvulsa(data);
+    }
+
+    @Get('fake')
+    async criarMultiplasSubmicoes(): Promise<any> {
+        return await this.questaoService.createFakeSubmicoes(20);
     }
 }

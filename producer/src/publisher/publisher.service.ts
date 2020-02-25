@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {Kafka, Producer} from '@nestjs/common/interfaces/external/kafka-options.interface';
+import {Logger} from '@nestjs/common';
 
 export interface IEvent {
     topicName: string;
@@ -19,6 +20,8 @@ export class PublisherService {
     }
 
     async sendEvent(data: IEvent) {
+        Logger.log(`Enviando Topic:${data.topicName} Payload: ${JSON.stringify(data.data)}`);
+
         await this.producer.send({
             topic: data.topicName,
             messages: [
