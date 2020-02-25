@@ -3,7 +3,7 @@ const log = require('log');
 
 const kafka = new Kafka({
     clientId: '1',
-    brokers: ['127.0.0.1:29092']
+    brokers: ['kafka:29092']
 });
 
 const consumer = kafka.consumer({groupId: '1'});
@@ -20,8 +20,6 @@ const bootstrap = async () => {
 
     await consumer.run({
         eachMessage: async ({topic, partition, message}) => {
-
-
             console.log({
                 topic,
                 partition,

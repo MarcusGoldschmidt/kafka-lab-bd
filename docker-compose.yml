@@ -30,6 +30,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       TZ: GMT-4
+    ports:
+      - 5432:5432
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     networks:
@@ -59,7 +61,7 @@ services:
       POSTGRES_USER: postgres
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_DEFAULT_HOST: 
+      PGADMIN_DEFAULT_HOST:
     depends_on:
       - postgres
     networks:
@@ -72,26 +74,28 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
-    network_mode: host
     environment:
       ZOOKEEPER_CLIENT_PORT: 32181
       ZOOKEEPER_TICK_TIME: 2000
-    extra_hosts:
-      - "moby:127.0.0.1"
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      - broker
 
 
   kafka:
     image: confluentinc/cp-kafka:latest
-    network_mode: host
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: localhost:32181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    extra_hosts:
-      - "moby:127.0.0.1"
+    networks:
+      - broker
+      - rede-interna
+    ports:
+      - 29092:29092
 
   producer:
     build:
@@ -105,7 +109,23 @@ services:
       - traefik.http.routers.producer.rule=Host(`localhost`)
       - traefik.http.routers.producer.entrypoints=web
 
+  questao-job:
+    build:
+      context: ./consumers/questao-job
+    depends_on:
+      - kafka
+    networks:
+      - rede-interna
+
+  teste-job:
+    build:
+      context: ./consumers/test-job
+    depends_on:
+      - kafka
+    networks:
+      - rede-interna
 
 networks:
   rede-interna:
   rede-externa:
+  broker:

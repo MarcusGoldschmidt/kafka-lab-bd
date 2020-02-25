@@ -14,6 +14,4 @@ COPY --chown=node:node . .
 
 USER node
 
-RUN npm run build
-
 ENTRYPOINT node index.js
