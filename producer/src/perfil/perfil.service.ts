@@ -13,6 +13,6 @@ export class PerfilService {
     }
 
     async obterRandomIdAsync(): Promise<number> {
-        return (await this.questaoRepository.createQueryBuilder('Perfil').orderBy('RANDOM()').getOne()).id;
+        return (await this.questaoRepository.createQueryBuilder().orderBy('RANDOM()').getOne()).id;
     }
 }

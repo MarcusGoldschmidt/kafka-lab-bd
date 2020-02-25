@@ -14,6 +14,16 @@ export class QuestaoController {
         return 'good';
     }
 
+    @Get('processando')
+    async obterProcessando(): Promise<any> {
+        return await this.questaoService.obterQuestoesProcessando();
+    }
+
+    @Get('processadas')
+    async obterProcessados(): Promise<any> {
+        return await this.questaoService.obterQuestoesJaProcessadas();
+    }
+
     @Post()
     async enviarQuestao(data: {
         entrada: string,
@@ -25,6 +35,6 @@ export class QuestaoController {
 
     @Get('fake')
     async criarMultiplasSubmicoes(): Promise<any> {
-        return await this.questaoService.createFakeSubmicoes(20);
+        return await this.questaoService.createFakeSubmicoes(1);
     }
 }

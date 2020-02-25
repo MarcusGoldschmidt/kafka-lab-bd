@@ -5,7 +5,7 @@ import {QuestaoEntity} from './questao.entity';
 
 @Entity({name: 'tentativaQuestao'})
 export class QuestaoPerfilTentativaEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({name: 'id'})
     id: number;
 
     @Column({name: 'perfil_id'})
@@ -20,11 +20,11 @@ export class QuestaoPerfilTentativaEntity {
     @Column()
     entrada: string;
 
-    @Column({name: 'criado_em'})
+    @Column({name: 'criado_em', nullable: true})
     criadoEm: Date;
 
-    @Column({name: 'porcentagem_erro'})
-    porcentagemErro: Date;
+    @Column({name: 'porcentagem_erro', nullable: true})
+    porcentagemErro: number;
 
     @ManyToOne(type => PerfilEntity, user => user.questoesAvulsas)
     user: PerfilEntity;
@@ -34,6 +34,7 @@ export class QuestaoPerfilTentativaEntity {
 
     @BeforeInsert()
     OnBefore() {
+        this.criadoEm = new Date();
         this.status = QuestaoEnviadaStatus.PROCESSANDO;
     }
 }

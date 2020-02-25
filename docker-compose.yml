@@ -89,33 +89,44 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: 'QuestaoSubmetida:1:1,test-topic:1:1'
     networks:
       - broker
-      - rede-interna
     ports:
-      - 29092:29092
+      - 9092:9092
+      - 29094:29094
 
   producer:
     build:
       context: ./producer
+    environment:
+      BD_HOST: postgres
+      KAFKA_HOST: 'kafka'
+      PORT: 3000
     depends_on:
       - postgres
     networks:
+      - rede-interna
       - rede-externa
     labels:
       - traefik.enable=true
-      - traefik.http.routers.producer.rule=Host(`localhost`)
-      - traefik.http.routers.producer.entrypoints=web
+      - traefik.http.routers.producer.rule=Host(`producer.localhost`)
+      - traefik.port=3000
 
   questao-job:
     build:
       context: ./consumers/questao-job
     depends_on:
       - kafka
+    environment:
+      KAFKA_HOST: kafka
     networks:
       - rede-interna
+      - broker
 
   teste-job:
     build:
@@ -124,6 +135,7 @@ services:
       - kafka
     networks:
       - rede-interna
+      - broker
 
 networks:
   rede-interna:

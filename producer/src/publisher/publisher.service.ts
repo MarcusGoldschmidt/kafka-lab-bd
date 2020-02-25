@@ -1,6 +1,8 @@
 import {Injectable} from '@nestjs/common';
-import {Kafka, Producer} from '@nestjs/common/interfaces/external/kafka-options.interface';
 import {Logger} from '@nestjs/common';
+import {Kafka, Producer} from 'kafkajs';
+
+const kafkaBroker = process.env.KAFKA_HOST ? process.env.KAFKA_HOST + ':29092' : 'localhost:9092';
 
 export interface IEvent {
     topicName: string;
@@ -15,8 +17,13 @@ export class PublisherService {
     constructor() {
         this.producer = new Kafka({
             clientId: '1',
-            brokers: ['127.0.0.1:29092'],
-        }).producer();
+            brokers: [kafkaBroker],
+        }).producer({
+            allowAutoTopicCreation: true,
+            retry: {
+                maxRetryTime: 5,
+            },
+        });
     }
 
     async sendEvent(data: IEvent) {

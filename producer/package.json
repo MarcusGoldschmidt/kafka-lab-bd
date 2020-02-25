@@ -24,7 +24,6 @@
     "@nestjs/core": "^6.7.2",
     "@nestjs/platform-express": "^6.7.2",
     "@nestjs/typeorm": "^6.2.0",
-    "@types/kafkajs": "^1.9.0",
     "kafkajs": "^1.11.0",
     "pg": "^7.18.2",
     "reflect-metadata": "^0.1.13",

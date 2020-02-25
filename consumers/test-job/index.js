@@ -1,6 +1,8 @@
 const {Kafka} = require('kafkajs');
 const log = require('log');
 
+const connectionString = process.env.CONNECTION || 'postgresql://postgres:admin@postgres:5432/maratona';
+
 const kafka = new Kafka({
     clientId: '1',
     brokers: ['kafka:29092']

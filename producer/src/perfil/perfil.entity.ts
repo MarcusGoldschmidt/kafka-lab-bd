@@ -1,5 +1,5 @@
-import {Column, Entity, JoinTable, JoinTableOptions, ManyToMany, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {QuestaoPerfilTentativaEntity} from "../questao/questao-perfil-tentativa.entity";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {QuestaoPerfilTentativaEntity} from '../questao/questao-perfil-tentativa.entity';
 
 @Entity({name: 'perfil'})
 export class PerfilEntity {

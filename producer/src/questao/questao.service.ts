@@ -5,6 +5,7 @@ import {Repository} from 'typeorm';
 import {QuestaoPerfilTentativaEntity} from './questao-perfil-tentativa.entity';
 import {PerfilService} from '../perfil/perfil.service';
 import {QuestaoEntity} from './questao.entity';
+import {QuestaoEnviadaStatus} from "./questao-status.enum";
 
 @Injectable()
 export class QuestaoService {
@@ -16,6 +17,26 @@ export class QuestaoService {
         private readonly questaoRepository: Repository<QuestaoEntity>,
         private readonly publisherService: PublisherService,
         private readonly perfilService: PerfilService) {
+    }
+
+    async obterQuestoesProcessando(): Promise<QuestaoPerfilTentativaEntity[]> {
+        return await this.tentativaEntityRepository
+            .createQueryBuilder()
+            .where({
+                status: QuestaoEnviadaStatus.PROCESSANDO,
+            })
+            .orderBy('criado_em', 'DESC')
+            .getMany();
+    }
+
+    async obterQuestoesJaProcessadas(): Promise<QuestaoPerfilTentativaEntity[]> {
+        return await this.tentativaEntityRepository
+            .createQueryBuilder()
+            .where('status <> :status', {
+                status: QuestaoEnviadaStatus.PROCESSANDO,
+            })
+            .orderBy('criado_em', 'DESC')
+            .getMany();
     }
 
     async submeterTentativaAvulsa(data: {
@@ -34,7 +55,7 @@ export class QuestaoService {
 
         await this.publisherService
             .sendEvent({
-                topicName: 'questaoSubmetidaTopic',
+                topicName: 'QuestaoSubmetida',
                 data: submisao,
             });
         return submisao;
@@ -46,7 +67,7 @@ export class QuestaoService {
         for (let i = 0; i < lenght; i++) {
             vector.push(
                 this.submeterTentativaAvulsa({
-                    entrada: QuestaoService.randomString(),
+                    entrada: QuestaoService.randomString(300),
                     questaoId: await this.obterRandomQuestaoIdAsync(),
                     perfilId: await this.perfilService.obterRandomIdAsync(),
                 }),
@@ -57,10 +78,10 @@ export class QuestaoService {
     }
 
     async obterRandomQuestaoIdAsync(): Promise<number> {
-        return (await this.questaoRepository.createQueryBuilder('Questoes').orderBy('RANDOM()').getOne()).id;
+        return (await this.questaoRepository.createQueryBuilder().orderBy('RANDOM()').getOne()).id;
     }
 
-    private static randomString(): string {
+    private static randomString(length): string {
         let result = '';
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const charactersLength = characters.length;
