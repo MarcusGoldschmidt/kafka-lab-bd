@@ -33,7 +33,7 @@ export class QuestaoService {
         return await this.tentativaEntityRepository
             .createQueryBuilder()
             .where({
-                status: QuestaoEnviadaStatus.PROCESSANDO,
+                status,
             })
             .orderBy('criado_em', 'DESC')
             .getMany();

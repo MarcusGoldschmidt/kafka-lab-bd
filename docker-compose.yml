@@ -125,6 +125,7 @@ services:
       - kafka
     environment:
       KAFKA_HOST: kafka
+      CONNECTION: postgresql://postgres:admin@postgres:5432/maratona
     networks:
       - rede-interna
       - broker

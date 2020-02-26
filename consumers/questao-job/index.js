@@ -1,7 +1,7 @@
 const {Kafka} = require('kafkajs');
 const log = require('log');
 const {Pool} = require('pg');
-const connectionString = process.env.CONNECTION || 'postgresql://postgres:admin@postgres:5432/maratona';
+const connectionString = process.env.CONNECTION || 'postgresql://postgres:admin@localhost:5432/maratona';
 
 const kafkaBroker = process.env.KAFKA_HOST ? process.env.KAFKA_HOST + ':29092' : 'localhost:9092';
 
@@ -55,44 +55,43 @@ const bootstrap = async () => {
 
             const data = message.value.toString();
 
-            pool.connect(async (err, client, done) => {
-
-                console.log({
-                    topic,
-                    partition,
-                    offset: message.offset,
-                    value: JSON.stringify(data),
-                });
-
-                const id = JSON.parse(data).id;
-                let sql;
-
-                console.log(`Processando Id: ${id}`);
-                // 1 to 3
-                switch ((Math.random() * 3 | 0) + 1) {
-                    case 1:
-                        const porcentagemErro = (Math.random() * 100 | 0) + 1;
-                        sql = `UPDATE tentativaQuestao SET status = 1, porcentagem_erro = ${porcentagemErro} WHERE id = ${id}`;
-                        console.log(`ERROR: REPROVADO COM ${porcentagemErro}% de erro`);
-                        break;
-                    case 2:
-                        sql = `UPDATE tentativaQuestao SET status = 2, saida_erro = ${randonString(500)} WHERE id = ${id}`;
-                        console.log(`ERROR: ERRO_COMPILADOR`);
-                        break;
-                    case 3:
-                        sql = `UPDATE tentativaQuestao SET status = 3 WHERE id = ${id}`;
-                        console.log(`ERROR: APROVADO`);
-                        break;
-                }
-
-                try {
-                    await client.query(sql);
-                    done();
-                } catch (e) {
-
-                }
-
+            console.log({
+                topic,
+                partition,
+                offset: message.offset,
+                value: JSON.stringify(data),
             });
+
+            const id = JSON.parse(data).id;
+            let sql;
+            const table = 'public.\"tentativaQuestao\"';
+
+            console.log(`Processando id: ${id}`);
+            // 1 to 3
+            switch ((Math.random() * 3 | 0) + 1) {
+                case 1:
+                    const porcentagemErro = (Math.random() * 100 | 0) + 1;
+                    sql = `UPDATE ${table} SET status = 1, porcentagem_erro = ${porcentagemErro} WHERE id = ${id}`;
+                    console.log(`ERROR:  REPROVADO COM ${porcentagemErro}% de erro`);
+                    break;
+                case 2:
+                    sql = `UPDATE ${table} SET status = 2, saida_erro = ${randonString(500)} WHERE id = ${id}`;
+                    console.log(`ERROR: ERRO_COMPILADOR`);
+                    break;
+                case 3:
+                    sql = `UPDATE ${table} SET status = 3 WHERE id = ${id}`;
+                    console.log(`ERROR: APROVADO`);
+                    break;
+            }
+
+            const client = await pool.connect();
+            try {
+                console.log(`Executando: ${sql}`);
+                const res = await client.query(sql);
+                console.log(res.rows[0])
+            } finally {
+                client.release();
+            }
         },
     })
 };

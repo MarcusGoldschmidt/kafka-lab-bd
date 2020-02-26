@@ -20,7 +20,7 @@ export class QuestaoController {
     }
 
     @Get('status/:status')
-    async obterStatus(@Param() params: number): Promise<any> {
+    async obterStatus(@Param('status') params: number): Promise<any> {
         return await this.questaoService.obterQuestoesPorStatus(params);
     }
 
