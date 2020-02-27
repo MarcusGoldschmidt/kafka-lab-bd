@@ -98,7 +98,7 @@ services:
       - broker
     ports:
       - 9092:9092
-      - 29094:29094
+      - 29092:29092
 
   producer:
     build:
