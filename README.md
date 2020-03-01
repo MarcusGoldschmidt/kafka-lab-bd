@@ -11,7 +11,7 @@ Exemplo de aplicação utilizando kafka.
 - [Flyway](https://flywaydb.org/)
 - [Traefik](https://traefik.io)
 - [NestJs](https://nestjs.com/) (produz os eventos)
-- [Go](https://golang.org/) / [Node.js](https://nodejs.org/) (consome os eventos)
+- [Node.js](https://nodejs.org/) (consome os eventos)
 
 ## Instalação
 
