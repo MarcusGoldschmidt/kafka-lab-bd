@@ -16,9 +16,9 @@ Exemplo de aplicação utilizando kafka.
 ## Instalação
 
 ```bash
-  git clone https://github.com/MarcusGoldschmidt/Kafka-lab-bd.git
-  cd Kafka-lab-bd
-  docker-compose up -d
+git clone https://github.com/MarcusGoldschmidt/Kafka-lab-bd.git
+cd Kafka-lab-bd
+docker-compose up -d
 ```
 
 ### Links de acesso
