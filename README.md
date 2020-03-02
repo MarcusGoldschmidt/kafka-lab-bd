@@ -26,6 +26,7 @@ $ docker-compose up -d
 - Web Api: http://localhost
 - PgAdmin: http://pg.localhost
 - Traefik: http://traefik.localhost
+- WebApi: http://producer.localhost
 
 ## Aplicação
 
